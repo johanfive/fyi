@@ -13,7 +13,6 @@ interface FolderState {
 };
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('FYI: extension path looks like this: ', context.extensionPath);
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	if (!workspaceFolders) {
 		console.log('FYI: No workspace folder is open.');
@@ -25,7 +24,6 @@ export function activate(context: vscode.ExtensionContext) {
 		const folderPath = folder.uri.fsPath;
 		const filePath = join(folderPath, filename); // TODO: see if we can support case-insensitive file names
 		console.log(`FYI: Reading file from path: ${filePath}`);
-		console.log(JSON.stringify(context.globalState, null, 2));
 		const state = context.globalState.get<FolderState>(folderPath);
 		console.log(`FYI: Folder state - ${JSON.stringify(state, null, 2)}`);
 		readFile(filePath, 'utf8')
@@ -37,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 				console.log(`FYI: Stored quotes hash: ${storedQuotesHash || 'N/A'}`);
 				// If the quotes have changed, reset the dismissed state
 				if (storedQuotesHash && (currentQuotesHash !== storedQuotesHash)) {
+					// TODO: handle async
 					context.globalState.update(folderPath, { quotesHash: currentQuotesHash, quotes: {} });
 					console.log(`FYI: State has been reset due to changes in the ${filename} file.`);
 				}
@@ -44,11 +43,17 @@ export function activate(context: vscode.ExtensionContext) {
 					const quoteKey = `quote_${index}`;
 					const dismissedPermanently = state?.quotes[quoteKey]?.dismissedPermanently || false;
 					if (!dismissedPermanently) {
-						vscode.window.showInformationMessage(quote, 'Learn More', 'Got it', 'Not now')
+						const anchorRegex = /#([a-zA-Z0-9-_]+)$/;
+						const anchorMatch = quote.match(anchorRegex);
+						const anchor = anchorMatch && anchorMatch[0];
+						const displayQuote = quote.replace(anchorRegex, '').trim();
+						// TODO: handle async
+						vscode.window.showInformationMessage(displayQuote, 'Learn More', 'Got it', 'Not now')
 							.then((selection) => {
 								switch (selection) {
 									case 'Got it': {
-										const newState = state || { quotesHash: currentQuotesHash, quotes: {} };
+										const newState = state || { quotesHash: '', quotes: {} };
+										newState.quotesHash = currentQuotesHash;
 										const newQuoteState = newState.quotes[quoteKey]
 											? { ...newState.quotes[quoteKey], dismissedPermanently: true }
 											: { dismissedPermanently: true };
@@ -58,16 +63,14 @@ export function activate(context: vscode.ExtensionContext) {
 										break;
 									}
 									case 'Learn More': {
-										// vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath)).then(() => {
-										vscode.commands
-											.executeCommand('markdown.showPreview', vscode.Uri.file(filePath))
-											.then(() => {
-												const editor = vscode.window.activeTextEditor;
-												if (editor) {
-													const position = editor.document.positionAt(data.indexOf(quote));
-													editor.revealRange(new vscode.Range(position, position), vscode.TextEditorRevealType.AtTop);
-												}
+										const showPreviewCommandParams = vscode.Uri
+											.file(filePath)
+											.with({
+												fragment: (anchor || '').replace('#', ''),
 											});
+										// TODO: handle async
+										vscode.commands
+											.executeCommand('markdown.showPreview', showPreviewCommandParams);
 										// Once they've read the details, still not updating state,
 										// so that the notification will appear again next time
 										// and they can decide to dismiss it permanently then.
@@ -110,7 +113,8 @@ export function activate(context: vscode.ExtensionContext) {
 			.then(folderPath => {
 				if (folderPath) {
 					context.globalState.update(folderPath, { quotesHash: '', quotes: {} });
-					vscode.window.showInformationMessage('FYI: Dismissed notifications have been reset.');
+					return vscode.window
+						.showInformationMessage('FYI: Dismissed notifications have been reset.');
 				}
 			})
 			.catch((e) => {
