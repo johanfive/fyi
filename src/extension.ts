@@ -47,8 +47,14 @@ export function activate(context: vscode.ExtensionContext) {
 						const anchorMatch = quote.match(anchorRegex);
 						const anchor = anchorMatch && anchorMatch[0];
 						const displayQuote = quote.replace(anchorRegex, '').trim();
-						// TODO: handle async
-						vscode.window.showInformationMessage(displayQuote, 'Learn More', 'Got it', 'Not now')
+						const isCrucial = displayQuote.startsWith('(!)');
+						const finalQuote = isCrucial ? displayQuote.substring(3).trim() : displayQuote;
+						const buttons = ['Learn More', 'Got it'];
+						if (!isCrucial) {
+							buttons.push('Not now');
+						}
+						return vscode.window
+							.showInformationMessage(finalQuote, { modal: isCrucial }, ...buttons)
 							.then((selection) => {
 								switch (selection) {
 									case 'Got it': {
