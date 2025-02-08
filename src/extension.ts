@@ -106,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const resetDisposable = vscode.commands.registerCommand('fyi.resetDismissedNotifications', () => {
 		log('Resetting dismissed notifications.');
 		const workspaceFolders = vscode.workspace.workspaceFolders;
-		if (!workspaceFolders) {
+		if (!workspaceFolders || workspaceFolders.length === 0) {
 			log('No workspace folder is open.');
 			return;
 		}
@@ -127,12 +127,12 @@ export function activate(context: vscode.ExtensionContext) {
 				if (folderPath) {
 					context.globalState.update(folderPath, { quotesHash: '', quotes: {} });
 					return vscode.window
-						.showInformationMessage('FYI: Dismissed notifications have been reset.');
+						.showInformationMessage('Dismissed notifications have been reset.');
 				}
 			})
 			.catch((e) => {
 				console.error(e);
-				vscode.window.showErrorMessage('FYI: An error occurred while resetting dismissed notifications.');
+				vscode.window.showErrorMessage('An error occurred while resetting dismissed notifications.');
 			});
 	});
 
