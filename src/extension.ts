@@ -12,32 +12,39 @@ interface FolderState {
 	quotes: Record<string, QuoteState>;
 };
 
+const EXTENSION_NAME = 'FYI';
+const FILE_NAME = 'fyi.md';
+const DISMISS_PERMANENTLY = 'Got it';
+const DISMISS_TEMPORARILY = 'Not now';
+const LEARN_MORE = 'Learn More';
+const CRUCIAL_PREFIX = '(!)';
+const log = (message: string) => console.log(`${EXTENSION_NAME}: ${message}`);
+
 export function activate(context: vscode.ExtensionContext) {
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	if (!workspaceFolders) {
-		console.log('FYI: No workspace folder is open.');
+		log('No workspace folder is open.');
 		return;
 	}
 
 	workspaceFolders.forEach(folder => {
-		const filename = 'fyi.md';
 		const folderPath = folder.uri.fsPath;
-		const filePath = join(folderPath, filename); // TODO: see if we can support case-insensitive file names
-		console.log(`FYI: Reading file from path: ${filePath}`);
+		const filePath = join(folderPath, FILE_NAME); // TODO: see if we can support case-insensitive file names
+		log(` Reading file from path: ${filePath}`);
 		const state = context.globalState.get<FolderState>(folderPath);
-		console.log(`FYI: Folder state - ${JSON.stringify(state, null, 2)}`);
+		log(` Folder state - ${JSON.stringify(state, null, 2)}`);
 		readFile(filePath, 'utf8')
 			.then(data => {
 				const quotes = getQuotesBetweenHeaders(data);
 				const currentQuotesHash = hashQuotes(quotes);
-				console.log(`FYI: Current quotes hash: ${currentQuotesHash}`);
+				log(` Current quotes hash: ${currentQuotesHash}`);
 				const storedQuotesHash = state?.quotesHash;
-				console.log(`FYI: Stored quotes hash: ${storedQuotesHash || 'N/A'}`);
+				log(` Stored quotes hash: ${storedQuotesHash || 'N/A'}`);
 				// If the quotes have changed, reset the dismissed state
 				if (storedQuotesHash && (currentQuotesHash !== storedQuotesHash)) {
 					// TODO: handle async
 					context.globalState.update(folderPath, { quotesHash: currentQuotesHash, quotes: {} });
-					console.log(`FYI: State has been reset due to changes in the ${filename} file.`);
+					log(` State has been reset due to changes in the ${FILE_NAME} file.`);
 				}
 				quotes.forEach((quote, index) => {
 					const quoteKey = `quote_${index}`;
@@ -47,17 +54,17 @@ export function activate(context: vscode.ExtensionContext) {
 						const anchorMatch = quote.match(anchorRegex);
 						const anchor = anchorMatch && anchorMatch[0];
 						const displayQuote = quote.replace(anchorRegex, '').trim();
-						const isCrucial = displayQuote.startsWith('(!)');
+						const isCrucial = displayQuote.startsWith(CRUCIAL_PREFIX);
 						const finalQuote = isCrucial ? displayQuote.substring(3).trim() : displayQuote;
-						const buttons = ['Learn More', 'Got it'];
+						const buttons = [LEARN_MORE, DISMISS_PERMANENTLY];
 						if (!isCrucial) {
-							buttons.push('Not now');
+							buttons.push(DISMISS_TEMPORARILY);
 						}
 						return vscode.window
 							.showInformationMessage(finalQuote, { modal: isCrucial }, ...buttons)
 							.then((selection) => {
 								switch (selection) {
-									case 'Got it': {
+									case DISMISS_PERMANENTLY: {
 										const newState = state || { quotesHash: '', quotes: {} };
 										newState.quotesHash = currentQuotesHash;
 										const newQuoteState = newState.quotes[quoteKey]
@@ -65,10 +72,10 @@ export function activate(context: vscode.ExtensionContext) {
 											: { dismissedPermanently: true };
 										newState.quotes[quoteKey] = newQuoteState;
 										context.globalState.update(folderPath, newState);
-										console.log(`FYI: Dismissed permanently - ${quoteKey}`);
+										log(` Dismissed permanently - ${quoteKey}`);
 										break;
 									}
-									case 'Learn More': {
+									case LEARN_MORE: {
 										const showPreviewCommandParams = vscode.Uri
 											.file(filePath)
 											.with({
@@ -92,21 +99,21 @@ export function activate(context: vscode.ExtensionContext) {
 			})
 			.catch(err => {
 				console.error(err);
-				vscode.window.showWarningMessage(`Unable to read ${filename} - this file is required for the FYI extension to work properly.`);
+				vscode.window.showWarningMessage(`Unable to read ${FILE_NAME} - this file is required for the FYI extension to work properly.`);
 			});
 	});
 
 	const resetDisposable = vscode.commands.registerCommand('fyi.resetDismissedNotifications', () => {
-		console.log('FYI: Resetting dismissed notifications.');
+		log('Resetting dismissed notifications.');
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		if (!workspaceFolders) {
-			console.log('FYI: No workspace folder is open.');
+			log('No workspace folder is open.');
 			return;
 		}
 		Promise.resolve()
 			.then(() => {
 				if (workspaceFolders.length > 1) {
-					console.log('FYI: Multiple workspace folders are open - asking user to select one.');
+					log('Multiple workspace folders are open - asking user to select one.');
 					return vscode.window.showInformationMessage(
 						'You have multiple workspace folders open. Please select one to reset dismissed notifications.',
 						...workspaceFolders.map(folder => folder.name)
