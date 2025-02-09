@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
-import { readFile } from 'node:fs/promises';
+import { readFile, copyFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 import getQuotesBetweenHeaders from './getQuotesBetweenHeaders';
 
 interface QuoteState {
@@ -13,7 +14,8 @@ interface FolderState {
 };
 
 const EXTENSION_NAME = 'FYI';
-const FILE_NAME = 'fyi.md';
+const FILE_NAME = 'FYI.md';
+const TEMPLATE_FILE_PATH = join(__dirname, FILE_NAME);
 const DISMISS_PERMANENTLY = 'Got it';
 const DISMISS_TEMPORARILY = 'Not now';
 const LEARN_MORE = 'Learn More';
@@ -21,15 +23,15 @@ const CRUCIAL_PREFIX = '(!)';
 const log = (message: string) => console.log(`${EXTENSION_NAME}: ${message}`);
 
 export function activate(context: vscode.ExtensionContext) {
-	const workspaceFolders = vscode.workspace.workspaceFolders;
-	if (!workspaceFolders) {
-		log('No workspace folder is open.');
+	const { workspaceFolders } = vscode.workspace;
+	if (!workspaceFolders || workspaceFolders.length === 0) {
+		log('No workspace folder is open!');
 		return;
 	}
 
 	workspaceFolders.forEach(folder => {
 		const folderPath = folder.uri.fsPath;
-		const filePath = join(folderPath, FILE_NAME); // TODO: see if we can support case-insensitive file names
+		const filePath = join(folderPath, FILE_NAME);
 		log(` Reading file from path: ${filePath}`);
 		const state = context.globalState.get<FolderState>(folderPath);
 		log(` Folder state - ${JSON.stringify(state, null, 2)}`);
@@ -56,7 +58,11 @@ export function activate(context: vscode.ExtensionContext) {
 						const displayQuote = quote.replace(anchorRegex, '').trim();
 						const isCrucial = displayQuote.startsWith(CRUCIAL_PREFIX);
 						const finalQuote = isCrucial ? displayQuote.substring(3).trim() : displayQuote;
-						const buttons = [LEARN_MORE, DISMISS_PERMANENTLY];
+						const buttons = [];
+						if (anchor) {
+							buttons.push(LEARN_MORE);
+						}
+						buttons.push(DISMISS_PERMANENTLY);
 						if (!isCrucial) {
 							buttons.push(DISMISS_TEMPORARILY);
 						}
@@ -81,13 +87,11 @@ export function activate(context: vscode.ExtensionContext) {
 											.with({
 												fragment: (anchor || '').replace('#', ''),
 											});
-										// TODO: handle async
-										vscode.commands
+										return vscode.commands
 											.executeCommand('markdown.showPreview', showPreviewCommandParams);
 										// Once they've read the details, still not updating state,
 										// so that the notification will appear again next time
 										// and they can decide to dismiss it permanently then.
-										break;
 									}
 									default:
 										// No-op, just dismiss the notification without updating the state
@@ -98,14 +102,31 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			})
 			.catch(err => {
+				if (err.code === 'ENOENT') {
+					vscode.window.showWarningMessage(
+						`Missing ${FILE_NAME} file in workspace at ${folderPath}.`
+						+ `\nThis file is required for the ${EXTENSION_NAME} extension to work.`
+					);
+					return copyFile(TEMPLATE_FILE_PATH, filePath);
+				}
+				if (err.message === 'Headers missing') {
+					vscode.window.showWarningMessage(
+						`Missing required headers in ${FILE_NAME} file in the workspace at ${folderPath}.`
+					);
+					return;
+				}
 				console.error(err);
-				vscode.window.showWarningMessage(`Unable to read ${FILE_NAME} - this file is required for the FYI extension to work properly.`);
+				vscode.window.showWarningMessage('Something went awry, check the logs for more details.');
+			})
+			.catch(err => {
+				console.error(err);
+				vscode.window.showWarningMessage(`Unable to create an ${FILE_NAME} file. Create one manually to use the ${EXTENSION_NAME} extension.`);
 			});
 	});
 
 	const resetDisposable = vscode.commands.registerCommand('fyi.resetDismissedNotifications', () => {
 		log('Resetting dismissed notifications.');
-		const workspaceFolders = vscode.workspace.workspaceFolders;
+		const { workspaceFolders } = vscode.workspace;
 		if (!workspaceFolders || workspaceFolders.length === 0) {
 			log('No workspace folder is open.');
 			return;
@@ -141,9 +162,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 // Utility function to hash quotes
 function hashQuotes(quotes: string[]): string {
-	const hash = require('crypto').createHash('sha256');
-	hash.update(quotes.join(''));
-	return hash.digest('hex');
+	return createHash('sha256')
+		.update(quotes.join(''))
+		.digest('hex');
 }
 
 // This method is called when your extension is deactivated
