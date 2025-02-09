@@ -39,10 +39,13 @@ eg: the `#syntax` in a `[link](#syntax)`.
 + Limit the number of concurrent notifications to `3`  
   (FYI doesn't enforce any limit - the _F_ stands for _Footfun_)
 + Use `crucial` notifications _judiciously_ and _sparingly_
-+ Keep the content of the notification succinct + elaborate in the [Details](#details) section
++ Keep the content of a notification succinct + elaborate in its [Details](#details) section
 + The surest way to make sure you get the syntax right for an `anchor` is to start by drafting an actual link, test it out, then just remove the fluff.  
   eg: actually type out `> notification here [details](#details)`  
   so that you get intellisense suggestions for the anchor, then delete the `[details](` and `)`.
++ Add headers that mirror each other in the FYI and Detais section.  
+  eg: `## Regular notification example` [here](#regular-notification-example) and [here](#regular-notification-example-1).  
+  This becomes especially useful if you have multiple notifications.
 
 #### Other features
 - If you have permanently dismissed a notification, but would actually want it to come up again next time you open the project, you can run the `FYI: Reset Dismissed Notifications` command (`SHIFT`+`CMD`+`p`)
