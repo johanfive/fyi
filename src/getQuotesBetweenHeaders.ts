@@ -1,3 +1,5 @@
+import { FILE_NAME } from "./constants";
+
 const getQuotesBetweenHeaders = (
     markdown: string,
     h1 = "# FYI",
@@ -33,7 +35,7 @@ const getQuotesBetweenHeaders = (
     if (h1Exists && h2Exists) {
         return quotes;
     }
-    throw new Error("Headers missing");
+    throw new Error(`Headers missing in ${FILE_NAME}`);
 };
 
 export default getQuotesBetweenHeaders;
