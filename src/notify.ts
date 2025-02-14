@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { join } from "node:path";
 import { getState, log } from "./utils";
 import { FILE_NAME } from "./constants";
 import parseMdFile from "./parseMdFile";

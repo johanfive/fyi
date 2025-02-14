@@ -1,8 +1,9 @@
 {
   "name": "fyi",
   "displayName": "FYI",
-  "description": "Nobody reads READMEs. Motion attracts attention. This extension helps repo maintainers create notifications that will pop up next time someone opens their project in VS Code.",
+  "description": "Nobody reads READMEs. Motion attracts attention. FYI puts readmes in motion",
   "version": "0.0.1",
+  "publisher": "johanFive",
   "author": "johanFive",
   "engines": {
     "vscode": "^1.96.0"
@@ -10,6 +11,13 @@
   "categories": [
     "Other"
   ],
+  "icon": "src/images/icon.png",
+  "galleryBanner": {
+    "color": "#555",
+    "theme": "dark"
+  },
+  "keywords": ["READMEs", "notifications", "updates", "popups", "collaboration"],
+  "pricing": "Free",
   "activationEvents": [ "onStartupFinished" ],
   "main": "./out/extension.js",
   "contributes": {
