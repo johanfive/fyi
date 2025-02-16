@@ -2,7 +2,7 @@
 
 ## Regular notification example
 Next time you open this project, a noticiation will popup with the following message:
-> FYI created an fyi.md file #regular-notification-example-1
+> Example notification from markdown file #regular-notification-example-1
 
 # Details
 
