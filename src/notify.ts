@@ -36,7 +36,19 @@ const notify = (context: vscode.ExtensionContext) => {
         return Promise.allSettled(notificationPromises);
       })
       .catch((error) => {
-        vscode.window.showErrorMessage(error.message);
+        if (error.isWarning) {
+          vscode.window.showWarningMessage(error.message, error.buttonText)
+            .then((selection) => {
+              if (selection === error.buttonText) {
+                vscode.commands.executeCommand(
+                  error.command,
+                  ...error.commandArgs,
+                );
+              }
+            });
+        } else {
+          vscode.window.showErrorMessage(error.message);
+        }
       })
       .then((outcome) => {
         if (Array.isArray(outcome)) {

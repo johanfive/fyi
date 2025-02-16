@@ -1,6 +1,9 @@
-import * as vscode from "vscode";
-import { copyFile, readFile } from "node:fs/promises";
-import { EXTENSION_NAME, FILE_NAME, TEMPLATE_FILE_PATH } from "./constants";
+import { readFile } from "node:fs/promises";
+import {
+  FILE_NAME,
+  GENERATE_MD_CMD,
+  GENERATE_MD_CMD_DISPLAY_NAME,
+} from "./constants";
 import getQuotesBetweenHeaders from "./getQuotesBetweenHeaders";
 import { getFilePath, hashQuotes, log } from "./utils";
 
@@ -9,7 +12,6 @@ const parseMdFile = (
 ): Promise<{ quotes: string[]; currentQuotesHash: string }> => {
   const filePath = getFilePath(folderPath);
   log(` Reading file from path: ${filePath}`);
-  const fileAtLocation = `${FILE_NAME} file in workspace at ${folderPath}`;
   return readFile(filePath, "utf8")
     .then((data) => {
       const quotes = getQuotesBetweenHeaders(data);
@@ -19,13 +21,15 @@ const parseMdFile = (
     })
     .catch((error) => {
       if (error.code === "ENOENT") {
-        return copyFile(TEMPLATE_FILE_PATH, filePath)
-          .then(() => {
-            vscode.window.showInformationMessage(
-              `${EXTENSION_NAME} created missing ${fileAtLocation}.`,
-            );
-            return parseMdFile(folderPath);
-          });
+        const fileAtLocation =
+          `${FILE_NAME} at the root of workspace ${folderPath}`;
+        const command = GENERATE_MD_CMD_DISPLAY_NAME;
+        error.message =
+          `Missing required file. Use the "${command}" command to create ${fileAtLocation}`;
+        error.isWarning = true;
+        error.command = GENERATE_MD_CMD;
+        error.commandArgs = [folderPath];
+        error.buttonText = "Generate File";
       }
       throw error;
     });

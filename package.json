@@ -25,6 +25,10 @@
       {
         "command": "fyi.resetDismissedNotifications",
         "title": "FYI: Reset Dismissed Notifications"
+      },
+      {
+        "command": "fyi.generateMdFile",
+        "title": "FYI: Generate markdown file"
       }
     ]
   },
