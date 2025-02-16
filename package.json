@@ -3,6 +3,7 @@
   "displayName": "FYI",
   "description": "Nobody reads READMEs. Motion attracts attention. FYI puts readmes in motion",
   "version": "0.0.1",
+  "license": "MIT",
   "publisher": "johanFive",
   "author": "johanFive",
   "engines": {
