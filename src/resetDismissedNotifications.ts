@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import selectWorkspaceThenDo from "./selectWorkspaceThenDo";
+import { Action } from "./constants";
 
 const resetFolderState =
-  (context: vscode.ExtensionContext) => (folderPath: string) => {
+  (context: vscode.ExtensionContext): Action => (folderPath) => {
     context.globalState.update(folderPath, {
       quotesHash: "",
       quotes: {},

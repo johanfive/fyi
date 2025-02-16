@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { log } from "./utils";
-
-type Action = (folderPath: string) => void;
+import { Action } from "./constants";
 
 const selectWorkspaceThenDo = (description: string, action: Action) => {
   log(description);

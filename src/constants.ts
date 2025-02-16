@@ -20,3 +20,5 @@ export interface FolderState {
   quotesHash: string;
   quotes: Record<string, QuoteState>;
 }
+
+export type Action = (folderPath: string) => void;

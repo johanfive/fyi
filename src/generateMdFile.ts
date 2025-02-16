@@ -1,10 +1,15 @@
 import * as vscode from "vscode";
 import { copyFile } from "node:fs/promises";
-import { EXTENSION_NAME, FILE_NAME, TEMPLATE_FILE_PATH } from "./constants";
+import {
+  Action,
+  EXTENSION_NAME,
+  FILE_NAME,
+  TEMPLATE_FILE_PATH,
+} from "./constants";
 import { getFilePath } from "./utils";
 import selectWorkspaceThenDo from "./selectWorkspaceThenDo";
 
-const copyTemplateMdFile = (folderPath: string) => {
+const copyTemplateMdFile: Action = (folderPath) => {
   const filePath = getFilePath(folderPath);
   const fileAtLocation = `${FILE_NAME} file in workspace at ${folderPath}.`;
   return copyFile(TEMPLATE_FILE_PATH, filePath)
