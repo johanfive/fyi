@@ -1,71 +1,114 @@
-# fyi README
+# FYI
 
-This is the README for your extension "fyi". After writing up a brief description, we recommend including the following sections.
++ Nobody reads READMEs
++ Motion attracts attention
+
+## READMEs in motion
+
+The `FYI` extension ensures that important information in your README files gets noticed.
+
+When someone pulls a branch containing an updated markdown file, they will see a notification popup in VS Code.
+
+This popup includes a button that takes them directly to the relevant section of the README.
+
+## How It Works
+
+1. Draft an `FYI.md` file with the important information (See [syntax](#syntax) you already know).
+2. Commit it to version control.
+3. When someone pulls the branch in VS Code, they will see a notification.
+4. Clicking the `Learn More` button takes them to the exact portion of the README you specified.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
++ **Attention-Grabbing Notifications**: Ensure critical information is seen.
++ **Direct Navigation**: Take users directly to the relevant section of the README.
++ **Easy Setup**: Simply create and commit an `FYI.md` file.
++ **Multi-roots** project support.
++ **Permanently dismissable notifications**: On a per-user basis. Control is in their hands.
++ **2 levels of urgency**: By default all notifications are a `non-intrusive popup`, but they can be configured to be an `unavoidable modal`.
++ Inherently **collaborative**.
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Commands
+`shift` + `command` + `p`
++ `FYI: Generate markdown file`: Creates a templated `FYI.md` file at the root of your project
++ `FYI: Reset Dismissed Notifications`: If you accidentally permanently-dismissed a notification but wish for it to popup again later, you can do a `reset`.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Works with `git` projects and requires all users to have their git `user.email` configured.
 
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+```sh
+# check if set:
+git config --get user.email
+# set globally (for all repositories):
+git config --global user.email "you@example.com"
+```
 
 ---
 
-## Following extension guidelines
+## Syntax
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+The `FYI.md` file **must** contain the following 2 headers:
+1. `# FYI`
+2. `# Details`
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+Anywhere in the file, but in that order.
 
-## Working with Markdown
+Any `quote` found in between these 2 headers, will be used to generate a notification.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+For a notification to contain a `Learn More` button that will take users to the portion of the file you wish them to see, **end** the quote with an `anchor`.
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+The anchor is simply the `#header` bit in a `[regular link](#header)`.
 
-## For more information
+For a notification to show up as a `modal`, start the quote with `(!)`.  
+Leverage this __judiciously__ and __sparingly__ for truly `crucial` information.
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+```markdown
+# FYI
 
-**Enjoy!**
+## Simple example
+Without a 'Learn More' button
+
+> Simple notification content
+
+## Multiline example
+
+> Multiline quotes still amount to
+> a single notification
+
+## Anchored example
+Keep the notification content succinct  
+elaborate in the `Details` section
+
+> With a 'Learn More' button #anchored-example-1
+
+## Crucial example
+
+> (!) This is now a modal #crucial-example-1
+
+# Details
+
+## Anchored example
+When users click the `Learn More` button, the __markdown preview__ page will open and take them right here.
+
+Notice how the anchor ends in `-1`? This is standard markdown because this file contains 2 identical headers `## Anchored example`.
+
+## Crucial example
+
+> With great power comes great responsability.
+
+This above quote will `not` turn into a notification, because it is `not` positioned between the `# FYI` and `# Details` headers.
+```
+
+In this example, you will find 4 quotes in between the opening and closing headers (`# FYI` and `# Details`).
+
+This will amount to 4 different notifications being rendered in `vscode`. Of which 1 will be a modal.
+
+> [!NOTE]
+> At this time, markdown syntax used inside a notification definition quote
+> will not be interpreted when the notification gets rendered.
+
+> [!NOTE]
+> Sometimes vscode can be funny with case-sensitivity in file names.
+> If you've used the extensions's command to generate the FYI.md file, you will be fine.
+> If you've manually created the file and lowercased it as fyi.md, surprises may ensue.

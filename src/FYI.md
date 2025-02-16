@@ -37,7 +37,7 @@ eg: the `#syntax` in a `[link](#syntax)`.
 
 #### Best practices
 + Limit the number of concurrent notifications to `3`  
-  (FYI doesn't enforce any limit - the _F_ stands for _Footfun_)
+  (FYI doesn't enforce any limit - the _F_ stands for _Footgun_)
 + Use `crucial` notifications _judiciously_ and _sparingly_
 + Keep the content of a notification succinct + elaborate in its [Details](#details) section
 + The surest way to make sure you get the syntax right for an `anchor` is to start by drafting an actual link, test it out, then just remove the fluff.  
