@@ -16,6 +16,7 @@
     "color": "#555",
     "theme": "dark"
   },
+  "markdown": "github",
   "keywords": ["READMEs", "notifications", "updates", "popups", "collaboration"],
   "pricing": "Free",
   "activationEvents": [ "onStartupFinished" ],
@@ -31,6 +32,13 @@
         "title": "FYI: Generate markdown file"
       }
     ]
+  },
+  "extensionKind": ["workspace"],
+  "capabilities": {
+    "virtualWorkspaces": false,
+    "untrustedWorkspaces": {
+      "supported": false
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

@@ -56,7 +56,9 @@ const notify = (context: vscode.ExtensionContext) => {
             .filter((o) => o.status === "rejected")
             .map((o) => o.reason)
             .join(", ");
-          vscode.window.showErrorMessage(errors);
+          if (errors.length) {
+            vscode.window.showErrorMessage(errors);
+          }
         }
       });
   });

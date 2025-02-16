@@ -7,11 +7,12 @@ const resetFolderState =
     context.globalState.update(folderPath, {
       quotesHash: "",
       quotes: {},
+    }).then(() => {
+      return vscode.window
+        .showInformationMessage(
+          "Dismissed notifications have been reset.",
+        );
     });
-    return vscode.window
-      .showInformationMessage(
-        "Dismissed notifications have been reset.",
-      );
   };
 
 const resetDismissedNotifications =

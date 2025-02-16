@@ -2,22 +2,24 @@ import { FILE_NAME } from "./constants";
 
 const getQuotesBetweenHeaders = (
     markdown: string,
-    h1 = "# FYI",
-    h2 = "# Details",
+    openingHeader = "# FYI",
+    closingHeader = "# Details",
 ) => {
     const lines = markdown.split("\n");
     let quotes = [];
-    let isBetweenHeaders = false;
     let currentQuote = "";
-    let h1Exists = false;
-    let h2Exists = false;
-    lines.forEach((line) => {
-        if (line.startsWith(h1)) {
+    let isBetweenHeaders = false;
+    let openingHeaderExists = false;
+    let closingHeaderExists = false;
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.startsWith(openingHeader)) {
             isBetweenHeaders = true;
-            h1Exists = true;
-        } else if (line.startsWith(h2)) {
+            openingHeaderExists = true;
+        } else if (line.startsWith(closingHeader)) {
             isBetweenHeaders = false;
-            h2Exists = true;
+            closingHeaderExists = true;
+            break;
         }
         // If we are between the headers, collect quotes
         if (isBetweenHeaders) {
@@ -28,11 +30,14 @@ const getQuotesBetweenHeaders = (
                 currentQuote = "";
             }
         }
-    });
+    }
+    // Without this check,
+    // the last quote in the markdown might be missed
+    // if it doesn't end with a new line
     if (currentQuote) {
         quotes.push(currentQuote.trim());
     }
-    if (h1Exists && h2Exists) {
+    if (openingHeaderExists && closingHeaderExists) {
         return quotes;
     }
     throw new Error(`Headers missing in ${FILE_NAME}`);
