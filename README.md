@@ -18,6 +18,29 @@ This popup includes a button that takes them directly to the relevant section of
 3. When someone pulls the branch in VS Code, they will see a notification.
 4. Clicking the `Learn More` button takes them to the exact portion of the README you specified.
 
+## Example
+
+![newInstall](newInstall.gif)
+What is happening?
+1. The repo does not have an `FYI.md` file, so the extension offers to generate one
+2. User accepts and the file gets created with a template
+3. The template contains an example notification, so a notification pops up
+4. User clicks the `Learn More` button
+5. The `markdown preview` window opens and scrolls down to a specific section
+6. User decides to edit the `FYI.md` file to add their own notications (pasting from clipboard)
+7. On save, because the file's content changed, and at this time the file is not yet version controlled, the notifcations trigger
+8. The user had created 2 notifications. 1 as a modal, the other as a regular popup
+
+![onCommit](onCommit.gif)
+What is happening?
+1. User commits an existing `FYI.md` file to version control
+2. User schedules a net new notification by editing the markdown file
+3. On save, nothing happens (because user is the commit author)
+
+Now when any other contributor to this repo does a `pull` and `checkout` of the `branch` containing this `commit`, the `notifications` will popup in their `vscode` window.
+
+They will then have the choice to view more details, dismiss the notification permanently, or ignore it for now. (If they simply ignore, the notification will popup again next time they re-open `vscode`).
+
 ## Features
 
 + **Attention-Grabbing Notifications**: Ensure critical information is seen.
