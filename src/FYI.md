@@ -1,7 +1,7 @@
 # FYI
 
 ## Regular notification example
-Next time you open this project, a noticiation will popup with the following message:
+Next time you open this project, a noticiation will pop up with the following message:
 > Example notification from markdown file #regular-notification-example-1
 
 # Details
@@ -28,7 +28,7 @@ The `FYI.md` file **must** be named as such, and **must** always have an `# FYI`
 
 Any quote (single or multi line) found between these headers will turn into a notification.
 
-Quotes starting with `(!)` are considered `crucial` notifications, and as such won't be a discreet popup in vscode, but a very-much-in-your-face modal instead.
+Quotes starting with `(!)` are considered `crucial` notifications, and as such won't be a discreet pop-up in vscode, but a very-much-in-your-face modal instead.
 
 For the `Learn More` button to appear, the quote **must** _end with_ an `anchor`.
 

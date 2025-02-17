@@ -8,7 +8,6 @@ export const DISMISS_TEMPORARILY = "Not now";
 export const LEARN_MORE = "Learn More";
 export const CRUCIAL_PREFIX = "(!)";
 export const ANCHOR_REGEX = /#([a-zA-Z0-9-_]+)$/;
-export const GENERATE_MD_CMD_DISPLAY_NAME = "FYI: Generate markdown file";
 export const GENERATE_MD_CMD = "fyi.generateMdFile";
 export const RESET_DISSMISSED_CMD = "fyi.resetDismissedNotifications";
 

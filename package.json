@@ -1,8 +1,8 @@
 {
   "name": "fyi",
   "displayName": "FYI",
-  "description": "Nobody reads READMEs. Motion attracts attention. FYI puts readmes in motion",
-  "version": "0.0.6",
+  "description": "Notify to README",
+  "version": "0.0.7",
   "license": "MIT",
   "publisher": "johanFive",
   "author": "johanFive",

@@ -1,9 +1,5 @@
 import { readFile } from "node:fs/promises";
-import {
-  FILE_NAME,
-  GENERATE_MD_CMD,
-  GENERATE_MD_CMD_DISPLAY_NAME,
-} from "./constants";
+import { FILE_NAME, GENERATE_MD_CMD } from "./constants";
 import getQuotesBetweenHeaders from "./getQuotesBetweenHeaders";
 import { getFilePath, hashQuotes, log } from "./utils";
 
@@ -21,11 +17,7 @@ const parseMdFile = (
     })
     .catch((error) => {
       if (error.code === "ENOENT") {
-        const fileAtLocation =
-          `${FILE_NAME} at the root of workspace ${folderPath}`;
-        const command = GENERATE_MD_CMD_DISPLAY_NAME;
-        error.message =
-          `Missing required file. Use the "${command}" command to create ${fileAtLocation}`;
+        error.message = `Missing ${FILE_NAME} file.`;
         error.isWarning = true;
         error.command = GENERATE_MD_CMD;
         error.commandArgs = [folderPath];

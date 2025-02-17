@@ -1,17 +1,21 @@
 # FYI
 
+> "Like phone apps that wait until you pick up your device to notify you"
+
 + Nobody reads READMEs
 + Motion attracts attention
 
 ## READMEs in motion
 
-The `FYI` extension ensures that important information in your README files gets noticed.
+The `FYI` extension ensures important information gets noticed.
 
-When someone pulls a branch containing an updated markdown file, they will see a notification popup in VS Code.
+> When someone pulls a branch containing an updated markdown file,
+> they will see a notification pop up in VS Code.
 
-This popup includes a button that takes them directly to the relevant section of the README.
+This pop-up includes a button that takes them directly to the relevant section of the README.
 
 ## How It Works
+> README file -> notification -> README file
 
 1. Draft an `FYI.md` file with the important information (See [syntax](#syntax) you already know).
 2. Commit it to version control.
@@ -20,26 +24,18 @@ This popup includes a button that takes them directly to the relevant section of
 
 ## Example
 
-![newInstall](newInstall.gif)
+![demo](demo.gif)
 What is happening?
-1. The repo does not have an `FYI.md` file, so the extension offers to generate one
-2. User accepts and the file gets created with a template
-3. The template contains an example notification, so a notification pops up
-4. User clicks the `Learn More` button
-5. The `markdown preview` window opens and scrolls down to a specific section
-6. User decides to edit the `FYI.md` file to add their own notications (pasting from clipboard)
-7. On save, because the file's content changed, and at this time the file is not yet version controlled, the notifcations trigger
-8. The user had created 2 notifications. 1 as a modal, the other as a regular popup
+1. User is on a branch that does not have the `FYI.md` file
+2. User fetched and now switches to the `main` branch
+3. `main` has an `FYI.md` file and it contains 2 notification definitions
+4. Because this is the 1st time user gets this version of the `FYI.md` file,
+the scheduled notifications pop up
+5. User clicks the `Learn More` button of the **modal**, the `markdown preview` page opens and the relevant content is displayed
+6. User clicks the `Learn More` button of the **popup**, and the relevant content scrolls into view in the `markdown preview`
 
-![onCommit](onCommit.gif)
-What is happening?
-1. User commits an existing `FYI.md` file to version control
-2. User schedules a net new notification by editing the markdown file
-3. On save, nothing happens (because user is the commit author)
-
-Now when any other contributor to this repo does a `pull` and `checkout` of the `branch` containing this `commit`, the `notifications` will popup in their `vscode` window.
-
-They will then have the choice to view more details, dismiss the notification permanently, or ignore it for now. (If they simply ignore, the notification will popup again next time they re-open `vscode`).
+- `Got it` button: permanently dismiss the notification
+- `Not now` button: dismiss the notification until next startup
 
 ## Features
 
@@ -48,13 +44,13 @@ They will then have the choice to view more details, dismiss the notification pe
 + **Easy Setup**: Simply create and commit an `FYI.md` file.
 + **Multi-roots** project support.
 + **Permanently dismissable notifications**: On a per-user basis. Control is in their hands.
-+ **2 levels of urgency**: By default all notifications are a `non-intrusive popup`, but they can be configured to be an `unavoidable modal`.
++ **2 levels of urgency**: By default all notifications are a `non-intrusive pop-up`, but they can be configured to be an `unavoidable modal`.
 + Inherently **collaborative**.
 
 ### Commands
 `shift` + `command` + `p`
-+ `FYI: Generate markdown file`: Creates a templated `FYI.md` file at the root of your project
-+ `FYI: Reset Dismissed Notifications`: If you accidentally permanently-dismissed a notification but wish for it to popup again later, you can do a `reset`.
++ `FYI: Generate markdown file`: Creates an `FYI.md` file at the root of your project
++ `FYI: Reset Dismissed Notifications`: Unsilence notifications that you permanently dismissed
 
 ## Requirements
 
