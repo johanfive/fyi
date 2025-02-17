@@ -2,7 +2,7 @@
   "name": "fyi",
   "displayName": "FYI",
   "description": "Nobody reads READMEs. Motion attracts attention. FYI puts readmes in motion",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "publisher": "johanFive",
   "author": "johanFive",
@@ -18,7 +18,7 @@
   ],
   "icon": "icon.png",
   "galleryBanner": {
-    "color": "#555",
+    "color": "#282D34",
     "theme": "dark"
   },
   "markdown": "github",
