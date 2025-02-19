@@ -1,8 +1,8 @@
 {
   "name": "fyi",
   "displayName": "FYI",
-  "description": "Notify to README",
-  "version": "0.0.7",
+  "description": "Notify to README | Team members get notified on next branch pull if the README has changed",
+  "version": "0.0.8",
   "license": "MIT",
   "publisher": "johanFive",
   "author": "johanFive",
@@ -22,7 +22,7 @@
     "theme": "dark"
   },
   "markdown": "github",
-  "keywords": ["READMEs", "notifications", "updates", "popups", "collaboration"],
+  "keywords": ["READMEs", "notifications", "updates", "popups", "docs-as-code"],
   "pricing": "Free",
   "activationEvents": [ "onStartupFinished" ],
   "main": "./out/extension.js",
@@ -35,6 +35,10 @@
       {
         "command": "fyi.generateMdFile",
         "title": "FYI: Generate markdown file"
+      },
+      {
+        "command": "fyi.addToWorkspaceRecommendations",
+        "title": "FYI: Add to Workspace Recommendations"
       }
     ]
   },

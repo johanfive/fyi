@@ -1,9 +1,9 @@
 # Change Log
 
-All notable changes to the "fyi" extension will be documented in this file.
+All notable changes to the "fyi" extension will be documented here.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.0.8] - 2025-02-18
 
-## [Unreleased]
+### Added
 
-- Initial release
+- New command `FYI: Add to Workspace Recommendations`: This command appends the FYI extension to the **recommendations** listed in `.vscode/extensions.json`. This further improves the odds that your documentation changes get eyeballed.

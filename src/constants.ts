@@ -1,5 +1,6 @@
 import { join } from "node:path";
 
+export const EXTENSION_ID = "johanfive.fyi";
 export const EXTENSION_NAME = "FYI";
 export const FILE_NAME = "FYI.md";
 export const TEMPLATE_FILE_PATH = join(__dirname, FILE_NAME);
@@ -10,6 +11,7 @@ export const CRUCIAL_PREFIX = "(!)";
 export const ANCHOR_REGEX = /#([a-zA-Z0-9-_]+)$/;
 export const GENERATE_MD_CMD = "fyi.generateMdFile";
 export const RESET_DISSMISSED_CMD = "fyi.resetDismissedNotifications";
+export const RECOMMEND_CMD = "fyi.addToWorkspaceRecommendations";
 
 interface QuoteState {
   dismissedPermanently: boolean;

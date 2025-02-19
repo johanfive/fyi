@@ -1,13 +1,13 @@
 # FYI
 
-> "Like phone apps that wait until you pick up your device to notify you"
+> "Like mobile apps that wait until you pick up your device to notify you"
+
+The `FYI` extension ensures important information gets noticed.
 
 + Nobody reads READMEs
 + Motion attracts attention
 
 ## READMEs in motion
-
-The `FYI` extension ensures important information gets noticed.
 
 > When someone pulls a branch containing an updated markdown file,
 > they will see a notification pop up in VS Code.

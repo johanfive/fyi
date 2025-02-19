@@ -4,6 +4,7 @@ import {
   Action,
   EXTENSION_NAME,
   FILE_NAME,
+  RECOMMEND_CMD,
   TEMPLATE_FILE_PATH,
 } from "./constants";
 import { getFilePath } from "./utils";
@@ -15,8 +16,16 @@ const copyTemplateMdFile: Action = (folderPath) => {
   return copyFile(TEMPLATE_FILE_PATH, filePath)
     .then(() => {
       vscode.window.showInformationMessage(
-        `${EXTENSION_NAME} created ${fileAtLocation}.`,
-      );
+        `${EXTENSION_NAME} created.
+        By clicking "Recommend", your team will be recommended this extension
+        the next time they open this project.
+        `,
+        "Recommend",
+      ).then((selection) => {
+        if (selection === "Recommend") {
+          vscode.commands.executeCommand(RECOMMEND_CMD);
+        }
+      });
     })
     .catch((error) => {
       console.error(error);

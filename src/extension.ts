@@ -3,7 +3,13 @@ import resetDismissedNotifications from "./resetDismissedNotifications";
 import notify from "./notify";
 import generateMdFile from "./generateMdFile";
 import handleFileChange from "./handleFileChange";
-import { FILE_NAME, GENERATE_MD_CMD, RESET_DISSMISSED_CMD } from "./constants";
+import {
+	FILE_NAME,
+	GENERATE_MD_CMD,
+	RECOMMEND_CMD,
+	RESET_DISSMISSED_CMD,
+} from "./constants";
+import addToWorkspaceRecommendations from "./recommend";
 
 export function activate(context: vscode.ExtensionContext) {
 	notify(context);
@@ -27,9 +33,15 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log(`${uri.fsPath} deleted`)
 	);
 
+	const disposable = vscode.commands.registerCommand(
+		RECOMMEND_CMD,
+		addToWorkspaceRecommendations,
+	);
+
 	context.subscriptions.push(resetDismissedDisposable);
 	context.subscriptions.push(generateMdFileDisposable);
 	context.subscriptions.push(fsWatcherDisposable);
+	context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}
