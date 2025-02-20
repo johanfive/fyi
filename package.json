@@ -2,7 +2,7 @@
   "name": "fyi",
   "displayName": "FYI",
   "description": "Notify to README | Team members get notified on next branch pull if the README has changed",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "publisher": "johanFive",
   "author": "johanFive",
@@ -22,9 +22,17 @@
     "theme": "dark"
   },
   "markdown": "github",
-  "keywords": ["READMEs", "notifications", "updates", "popups", "docs-as-code"],
+  "keywords": [
+    "READMEs",
+    "notifications",
+    "updates",
+    "popups",
+    "docs-as-code"
+  ],
   "pricing": "Free",
-  "activationEvents": [ "onStartupFinished" ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -42,7 +50,9 @@
       }
     ]
   },
-  "extensionKind": ["workspace"],
+  "extensionKind": [
+    "workspace"
+  ],
   "capabilities": {
     "virtualWorkspaces": false,
     "untrustedWorkspaces": {
@@ -59,14 +69,17 @@
     "copy:fyimd": "cp ./src/FYI.md ./out"
   },
   "devDependencies": {
-    "@types/vscode": "^1.96.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
-    "eslint": "^9.19.0",
-    "typescript": "^5.7.3",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.19.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "jsonc-parser": "^3.3.1"
   }
 }
